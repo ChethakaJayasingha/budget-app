@@ -34,7 +34,8 @@ self.addEventListener('fetch', (event) => {
 
   event.respondWith(caches.open(CACHE).then(async (cache) => {
     const cached = await cache.match(request, { ignoreSearch: true });
-    const fresh = fetch(request).then((response) => {
+    // no-cache: always ask GitHub whether the file changed, so updates aren't held back by the HTTP cache.
+    const fresh = fetch(request, { cache: 'no-cache' }).then((response) => {
       if (response.ok) cache.put(request, response.clone());
       return response;
     });
